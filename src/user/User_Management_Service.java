@@ -7,6 +7,7 @@ import user.User;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 /**
  * packageName   : jdbc.advanced.users
@@ -351,7 +352,10 @@ public class User_Management_Service {
     // 전체 회원 정보를 출력하는 메서드
     private void displayMember(){
         Connection conn = null;
-        PreparedStatement pstmt = null;
+
+        // Statement : 고정된 SQL 쿼리를 한 번 실행하는 경우
+        // PreparedStatement : 동적 SQL (파라미터 바인딩이 필요한 경우)
+        Statement stmt = null;
         ResultSet rs = null;
 
         System.out.println();
@@ -368,11 +372,12 @@ public class User_Management_Service {
                     .toString();
 
             // PreparedStatement : query를 담아서 connection을 타고 내가 지정한 db의 users 테이블로 insert를 날리겠다.
-            pstmt = conn.prepareStatement(query);
+            stmt = conn.prepareStatement(query);
 
             // 4. SQL문 실행
             // DBMS로 출발시키는 명령어
-            rs = pstmt.executeQuery();
+            rs = stmt.executeQuery(query);
+            ArrayList<User> list = new ArrayList<>();
             while (rs.next()) {
                 User user = new User();
                 user.setUserid(rs.getString("userid"));
@@ -380,11 +385,20 @@ public class User_Management_Service {
                 user.setUserpassword(rs.getString("userpassword"));
                 user.setUserphone(rs.getString("userphone"));
                 user.setUseraddr(rs.getString("useraddr"));
-                System.out.println(user);
+                list.add(user);
             }
 
             // 5. PreparedStatement 객체 닫기 : pstmt 자동차 반납
-            pstmt.close();
+            stmt.close();
+
+            list.forEach(x -> System.out.println(
+                    "  " +
+                    x.getUserid() + "\t\t" +
+                    x.getUsername() + "\t\t" +
+                    x.getUserpassword() + "\t\t" +
+                    x.getUserphone() + "\t\t" +
+                    x.getUseraddr()
+            ));
 
             System.out.println("===============================================");
             System.out.println("출력 작업 끝...");
@@ -392,9 +406,9 @@ public class User_Management_Service {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(rs!=null) try{ rs.close();   }catch(SQLException e){}
-            if(pstmt!=null) try{ pstmt.close();   }catch(SQLException e){}
-            if(conn!=null) try{ conn.close();   }catch(SQLException e){}
+            if(rs!=null) try{ rs.close(); }catch(SQLException e){}
+            if(stmt!=null) try{ stmt.close(); }catch(SQLException e){}
+            if(conn!=null) try{ conn.close(); }catch(SQLException e){}
         }
 
     }
