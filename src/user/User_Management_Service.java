@@ -117,7 +117,7 @@ public class User_Management_Service {
             pstmt.setString(2, memName);
             pstmt.setString(3, memPass);
             pstmt.setString(4, memTel);
-            pstmt.setString(4, memAddr);
+            pstmt.setString(5, memAddr);
 
             // 4. SQL문 실행
             // DBMS로 출발시키는 명령어
@@ -291,13 +291,13 @@ public class User_Management_Service {
             num = scan.nextInt();
 
             switch(num){
-                case 1 : updateField = "mem_name";
+                case 1 : updateField = "username";
                     updateTitle = "회원이름"; break;
-                case 2 : updateField = "mem_pass";
+                case 2 : updateField = "userpassword";
                     updateTitle = "비밀번호"; break;
-                case 3 : updateField = "mem_tel";
+                case 3 : updateField = "userphone";
                     updateTitle = "전화번호"; break;
-                case 4 : updateField = "mem_addr";
+                case 4 : updateField = "useraddr";
                     updateTitle = "회원주소"; break;
                 default :
                     System.out.println("수정할 항목을 잘못 선택했습니다.");
@@ -411,7 +411,7 @@ public class User_Management_Service {
 
             // 깔끔하게 매개변수화된 SQL 문 작성하기
             String query = new StringBuilder()
-                    .append("SELECT count(userid) FROM users_2")
+                    .append("SELECT * FROM users_2")
                     .append(" WHERE userid = ?")
                     .toString();
 

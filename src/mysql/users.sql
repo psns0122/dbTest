@@ -15,3 +15,5 @@ create table users_2 (
     userphone        varchar(50) not null,
     useraddr        varchar(50) not null
 );
+
+SELECT count(userid) FROM users_2 WHERE userid = "111";
